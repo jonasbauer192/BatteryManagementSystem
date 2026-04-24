@@ -1,0 +1,21 @@
+# Build folders (CMake)
+build/
+cmake-build-*/
+
+# CLion / JetBrains IDE
+.idea/
+
+# Compiled files
+*.o
+*.obj
+*.out
+*.exe
+
+# Executables (if not in build folder)
+*.elf
+*.bin
+
+# OS noise (macOS-specific / Windows-specific / Ubuntu-specific)
+.DS_Store
+Thumbs.db
+*~
