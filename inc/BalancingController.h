@@ -20,6 +20,7 @@ private:
     BatteryPack batteryPack;
     std::array<BatteryCell, NUM_OF_BATTERY_CELLS> batteryCells;
     std::vector<BatteryCell*> activeCells;
+    HardwareAccess hw;
     int iteration;
 
     mV determineDischargeAmount(int const cellIndex);

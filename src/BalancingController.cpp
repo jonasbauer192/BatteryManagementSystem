@@ -1,6 +1,6 @@
 #include "BalancingController.h"
 
-BalancingController::BalancingController(): batteryPack(), batteryCells(), iteration(0){}
+BalancingController::BalancingController(): batteryPack(), batteryCells(), iteration(0), hw(){}
 
 
 mV BalancingController::determineDischargeAmount(int const cellIndex){
@@ -23,7 +23,7 @@ void BalancingController::serviceRoutine(){
     for (auto &cell: this->activeCells){
         amount = determineDischargeAmount(cell->getIndex());
         if (amount != 0){
-            cell->discharge(amount);
+            cell->discharge(amount, this->hw);
         }
     }
 }
@@ -41,7 +41,7 @@ void BalancingController::report(){
 
 void BalancingController::update(){
     for (auto &cell: this->activeCells){
-        cell->update();
+        cell->update(this->hw);
     }
     this->batteryPack.update(this->batteryCells);
 }

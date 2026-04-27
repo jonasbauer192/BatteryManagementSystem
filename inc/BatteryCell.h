@@ -22,8 +22,8 @@ private:
     mV overVoltage;
     mV underVoltage;
 
-    bool readRawVoltage(std::vector<mV> &rawVoltages);
-    bool readVoltage();
+    bool readRawVoltage(std::vector<mV> &rawVoltages, HardwareAccess &hw);
+    bool readVoltage(HardwareAccess &hw);
     void determineSoc();
     void determineOverVoltage();
     void determineUnderVoltage();
@@ -32,8 +32,8 @@ private:
 public:
     BatteryCell();
     BatteryCell(const Type type);
-    void update();
-    void discharge(mV const deltaVoltage);
+    void update(HardwareAccess &hw);
+    void discharge(mV const deltaVoltage, HardwareAccess &hw);
     void cellInfo() const;
 
     int getIndex() const;

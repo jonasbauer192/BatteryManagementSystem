@@ -8,14 +8,14 @@ BatteryCell::BatteryCell(const Type type):
 	index(globalCellIndex++), type(type), state(INIT), overVoltage(0), underVoltage(0){}
 
 
-bool BatteryCell::readRawVoltage(std::vector<mV> &rawVoltages){
+bool BatteryCell::readRawVoltage(std::vector<mV> &rawVoltages, HardwareAccess &hw){
     int attemptCounter;
     mV voltage;
     for (int i = 0; i < NUM_OF_RAW_MEASUREMENTS; i++){
         attemptCounter = 0;
         while(1){
             attemptCounter++;
-            voltage = read_cell_voltage_mv(this->index);
+            voltage = hw.read_cell_voltage_mv(this->index);
             if (voltage){
                 rawVoltages.push_back(voltage);
                 break;
@@ -31,10 +31,10 @@ bool BatteryCell::readRawVoltage(std::vector<mV> &rawVoltages){
 }
 
 
-bool BatteryCell::readVoltage(){
+bool BatteryCell::readVoltage(HardwareAccess &hw){
 
     std::vector<mV> rawVoltages;
-    if (!readRawVoltage(rawVoltages)){
+    if (!readRawVoltage(rawVoltages, hw)){
         return false;
     }
 
@@ -81,8 +81,8 @@ void BatteryCell::faultHandling(){
 }
 
 
-void BatteryCell::update(){
-    if (!readVoltage()){
+void BatteryCell::update(HardwareAccess &hw){
+    if (!readVoltage(hw)){
         return;
     }
     determineSoc();
@@ -91,13 +91,13 @@ void BatteryCell::update(){
 }
 
 
-void BatteryCell::discharge(mV const deltaVoltage){
+void BatteryCell::discharge(mV const deltaVoltage, HardwareAccess &hw){
 	this->state = DISCHARGING;
 	mV targetVoltage = this->voltage - deltaVoltage;
 
 	while(this->voltage > targetVoltage){
-	    toggle_balancing_resistor(this->index);
-	    if (!readVoltage()){
+	    hw.toggle_balancing_resistor(this->index);
+	    if (!readVoltage(hw)){
 	        return;
 	    }
 	}
