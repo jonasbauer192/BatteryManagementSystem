@@ -5,9 +5,9 @@
 HardwareAccess::HardwareAccess() {
     for (int i = 0; i < NUM_OF_BATTERY_CELLS; i++) {
         if (fault_dist(rng)) {
-            voltages[i] = voltage_dist(rng);
+            this->voltages[i] = voltage_dist(rng);
         } else {
-            voltages[i] = 0;
+            this->voltages[i] = 0;
         }
     }
 }

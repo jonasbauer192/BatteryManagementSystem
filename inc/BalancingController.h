@@ -19,7 +19,6 @@ private:
     int index;
     BatteryPack batteryPack;
     std::array<BatteryCell, NUM_OF_BATTERY_CELLS> batteryCells;
-    std::vector<BatteryCell*> activeCells;
     HardwareAccess hw;
     int iteration;
 
@@ -27,8 +26,6 @@ private:
     void report();
     void serviceRoutine();
     void update();
-    void findActiveCells();
-    void initialize();
 
 public:
     BalancingController();
