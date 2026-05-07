@@ -17,5 +17,5 @@ uint16_t HardwareAccess::read_cell_voltage_mv(int cell_index) {
 }
 
 void HardwareAccess::toggle_balancing_resistor(int cell_index) {
-    this->voltages[cell_index] -= balance_dist(rng);
+    this->voltages[cell_index] -= voltage_reduction_dist(rng);
 }

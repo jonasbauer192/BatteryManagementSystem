@@ -3,13 +3,13 @@
 BalancingController::BalancingController(): batteryPack(), batteryCells(), iteration(0), hw(){}
 
 
-mV BalancingController::determineDischargeAmount(int const cellIndex){
+mV BalancingController::determineDischargeAmount(int const cellIndex) const{
     /*
      * finding the charging amount of each cell by identifying the
      * MAXIMUM amount out of cell and pack attributes
      */
     uint16_t numOfActiveCells = 0;
-    for (auto &cell: this->batteryCells) {
+    for (auto const &cell: this->batteryCells) {
         if (cell.getState() != FAULT){
             numOfActiveCells++;
         }

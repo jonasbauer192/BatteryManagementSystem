@@ -1,16 +1,13 @@
 #include "BatteryCell.h"
 
-
 BatteryCell::BatteryCell(): BatteryCell(LiIon) {
     std::cout << "Delegating constructor" << std::endl;
 }
-
 
 BatteryCell::BatteryCell(const Type type):
 	index(globalCellIndex++), type(type), state(INIT), overVoltage(0), underVoltage(0) {
     std::cout << "Initializer list" << std::endl;
 }
-
 
 bool BatteryCell::readRawVoltage(std::vector<mV> &rawVoltages, HardwareAccess &hw){
     int attemptCounter;
@@ -24,7 +21,6 @@ bool BatteryCell::readRawVoltage(std::vector<mV> &rawVoltages, HardwareAccess &h
                 rawVoltages.push_back(voltage);
                 break;
             }
-
             if (attemptCounter >= MAX_MEASUREMENT_ATTEMPTS){
                 faultHandling();
                 return false;
@@ -34,20 +30,15 @@ bool BatteryCell::readRawVoltage(std::vector<mV> &rawVoltages, HardwareAccess &h
     return true;
 }
 
-
 bool BatteryCell::readVoltage(HardwareAccess &hw){
-
     std::vector<mV> rawVoltages;
     if (!readRawVoltage(rawVoltages, hw)){
         return false;
     }
-
-
     mV voltage = 0;
-    for (auto const i: rawVoltages){
-        voltage += i;
+    for (auto const vlt: rawVoltages){
+        voltage += vlt;
     }
-
     this->voltage = (voltage /= rawVoltages.size());
     return true;
 }
@@ -66,7 +57,6 @@ void BatteryCell::determineOverVoltage(){
     }
 }
 
-
 void BatteryCell::determineUnderVoltage(){
     if (this->voltage < CELL_UNDER_VOLTAGE){
         this->underVoltage = CELL_UNDER_VOLTAGE - this->voltage;
@@ -74,7 +64,6 @@ void BatteryCell::determineUnderVoltage(){
         this->underVoltage = 0;
     }
 }
-
 
 void BatteryCell::faultHandling(){
     this->state = FAULT;
@@ -84,7 +73,6 @@ void BatteryCell::faultHandling(){
     this->underVoltage = 0;
 }
 
-
 void BatteryCell::update(HardwareAccess &hw){
     if (!readVoltage(hw)){
         return;
@@ -93,7 +81,6 @@ void BatteryCell::update(HardwareAccess &hw){
     determineOverVoltage();
     determineUnderVoltage();
 }
-
 
 void BatteryCell::discharge(mV const deltaVoltage, HardwareAccess &hw){
 	this->state = DISCHARGING;
@@ -108,7 +95,6 @@ void BatteryCell::discharge(mV const deltaVoltage, HardwareAccess &hw){
 	this->state = STANDBY;
 }
 
-
 void BatteryCell::cellInfo() const{
     std::cout << "######## CELL -" 	<< this->index << "- INFO ########" << std::endl;
     std::cout << "type:\t\t" 		<< this->type << std::endl;
@@ -119,7 +105,6 @@ void BatteryCell::cellInfo() const{
     std::cout << "under voltage:\t" << this->underVoltage << std::endl << std::endl;
 }
 
-
 int BatteryCell::getIndex() const{
     return this->index;
 }
@@ -127,7 +112,6 @@ int BatteryCell::getIndex() const{
 State BatteryCell::getState() const{
     return this->state;
 }
-
 
 mV BatteryCell::getVoltage() const{
     return this->voltage;

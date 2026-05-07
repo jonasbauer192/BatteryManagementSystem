@@ -4,10 +4,10 @@ BatteryPack::BatteryPack(): index(globalPackIndex++), overVoltage(0), deltaVolta
 
 void BatteryPack::determineOverVoltage(std::array<BatteryCell, NUM_OF_BATTERY_CELLS> const &batteryCells){
     mV packVoltage = 0;
-    for (auto cell = batteryCells.begin(); cell <= batteryCells.end() - 1; cell++){
-        packVoltage += cell->getVoltage();
-
+    for (auto const &cell: batteryCells){
+        packVoltage += cell.getVoltage();
     }
+
     if (packVoltage > PACK_OVER_TOTAL_VOLTAGE){
         this->overVoltage = packVoltage - PACK_OVER_TOTAL_VOLTAGE;
     } else{

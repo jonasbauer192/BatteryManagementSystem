@@ -22,7 +22,7 @@ private:
     HardwareAccess hw;
     int iteration;
 
-    mV determineDischargeAmount(int const cellIndex);
+    mV determineDischargeAmount(int const cellIndex) const;
     void report();
     void serviceRoutine();
     void update();

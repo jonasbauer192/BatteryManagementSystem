@@ -13,7 +13,7 @@ private:
     std::mt19937 rng{std::random_device{}()};
     std::uniform_int_distribution<int> voltage_dist{3200, 4200};
     std::uniform_int_distribution<int> voltage_noice_dist{0, 20};
-    std::uniform_int_distribution<int> balance_dist{0, 10};
+    std::uniform_int_distribution<int> voltage_reduction_dist{0, 10};
     std::uniform_int_distribution<int> fault_dist{0, 10};
 
 public:
