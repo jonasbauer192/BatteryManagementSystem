@@ -12,10 +12,10 @@ HardwareAccess::HardwareAccess() {
     }
 }
 
-uint16_t HardwareAccess::read_cell_voltage_mv(int cell_index) {
+uint16_t HardwareAccess::read_cell_voltage_mv(int const cell_index) {
     return this->voltages[cell_index] + voltage_noice_dist(rng);
 }
 
-void HardwareAccess::toggle_balancing_resistor(int cell_index) {
+void HardwareAccess::toggle_balancing_resistor(int const cell_index) {
     this->voltages[cell_index] -= voltage_reduction_dist(rng);
 }

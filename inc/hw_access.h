@@ -18,8 +18,8 @@ private:
 
 public:
     HardwareAccess();
-    uint16_t read_cell_voltage_mv(int cell_index);
-    void toggle_balancing_resistor(int cell_index);
+    uint16_t read_cell_voltage_mv(int const cell_index);
+    void toggle_balancing_resistor(int const cell_index);
 };
 
 #endif
