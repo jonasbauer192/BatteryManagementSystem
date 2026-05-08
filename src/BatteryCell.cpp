@@ -1,13 +1,9 @@
 #include "BatteryCell.h"
 
-BatteryCell::BatteryCell(): BatteryCell(LiIon) {
-    std::cout << "Delegating constructor" << std::endl;
-}
+BatteryCell::BatteryCell(): BatteryCell(LiIon) {}
 
 BatteryCell::BatteryCell(const Type type):
-	index(globalCellIndex++), type(type), state(INIT), overVoltage(0), underVoltage(0) {
-    std::cout << "Initializer list" << std::endl;
-}
+	index(globalCellIndex++), type(type), state(INIT), overVoltage(0), underVoltage(0) {}
 
 bool BatteryCell::readRawVoltage(std::vector<mV> &rawVoltages, HardwareAccess &hw){
     int attemptCounter;

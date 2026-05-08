@@ -18,9 +18,11 @@ void BatteryPack::determineOverVoltage(std::array<BatteryCell, NUM_OF_BATTERY_CE
 
 void BatteryPack::determineDeltaVoltage(std::array<BatteryCell, NUM_OF_BATTERY_CELLS> const &batteryCells){
 
-    std::array<mV, NUM_OF_BATTERY_CELLS> cellVoltages;
+    std::vector<mV> cellVoltages;
     for (int i = 0; i < NUM_OF_BATTERY_CELLS; i++){
-        cellVoltages[i] = batteryCells[i].getVoltage();
+        if (batteryCells[i].getVoltage() != FAULT) {
+            cellVoltages.push_back(batteryCells[i].getVoltage());
+        }
     }
 
 
