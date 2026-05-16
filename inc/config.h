@@ -1,18 +1,18 @@
 #pragma once
 #include <stdint.h>
 
-#define NUM_OF_BATTERY_CELLS        8
-#define NUM_OF_BATTERY_CELLS_PER_PACK       4
-#define NUM_OF_RAW_MEASUREMENTS     5
-#define MAXIMUM_CELL_VOLTAGE        4200
-#define MINIMUM_CELL_VOLTAGE        3200
-#define CELL_OVER_VOLTAGE           3900
-#define CELL_UNDER_VOLTAGE          3300
+constexpr int NUM_OF_BATTERY_CELLS = 8;
+constexpr int NUM_OF_BATTERY_CELLS_PER_PACK = 4;
+constexpr int NUM_OF_RAW_MEASUREMENTS = 5;
+constexpr int MAXIMUM_CELL_VOLTAGE = 200;
+constexpr int MINIMUM_CELL_VOLTAGE = 3200;
+constexpr int CELL_OVER_VOLTAGE = 3900;
+constexpr int CELL_UNDER_VOLTAGE = 3300;
 
-#define PACK_OVER_TOTAL_VOLTAGE     14000
-#define PACK_OVER_DELTA_VOLTAGE     500
+constexpr int PACK_OVER_TOTAL_VOLTAGE = 14000;
+constexpr int PACK_OVER_DELTA_VOLTAGE = 500;
 
-#define MAX_MEASUREMENT_ATTEMPTS    3
+constexpr int MAX_MEASUREMENT_ATTEMPTS = 3;
 
 
 
