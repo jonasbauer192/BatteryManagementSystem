@@ -1,6 +1,10 @@
 #include "BatteryCell.h"
 
 
+#include <vector>
+#include <iostream>
+
+
 BatteryCell::BatteryCell(const Type type, Logger &logger, HardwareAccess &hw):
 	hw(hw), index(globalCellIndex++), type(type), state(INIT), overVoltage(0), underVoltage(0), logger(logger) {}
 

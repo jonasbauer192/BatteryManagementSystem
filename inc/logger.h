@@ -3,12 +3,9 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
-#include <iostream>
 #include <string>
 #include "config.h"
-#include <sstream>
 #include <fstream>
-#include <ctime>
 
 
 

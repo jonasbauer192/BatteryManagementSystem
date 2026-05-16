@@ -3,11 +3,6 @@
 #ifndef BATTERCELL_H_
 #define BATTERYCELL_H_
 
-#include <stdint.h>
-#include <array>
-#include <vector>
-#include <iostream>
-
 #include "config.h"
 #include "hw_access.h"
 #include "logger.h"

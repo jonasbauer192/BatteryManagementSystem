@@ -7,10 +7,7 @@
 #include "BatteryCell.h"
 #include "logger.h"
 
-#include <stdint.h>
-#include <array>
-#include <algorithm>
-#include <thread>
+
 
 class BatteryPack{
 private:

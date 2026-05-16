@@ -1,5 +1,10 @@
 #include "BatteryPack.h"
 
+#include <stdint.h>
+#include <array>
+#include <algorithm>
+#include <thread>
+
 BatteryPack::BatteryPack(Logger &logger)
     : overVoltage(0), deltaVoltage(0), iteration(0), logger(logger), hw(){
         batteryCells.reserve(NUM_OF_BATTERY_CELLS_PER_PACK);

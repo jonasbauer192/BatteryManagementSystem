@@ -1,5 +1,6 @@
 #include "BalancingController.h"
 #include "logger.h"
+#include <iostream>
 
 BalancingController::BalancingController(int const numOfPacks, Logger &logger): logger(logger){
     batteryPacks.reserve(numOfPacks);
