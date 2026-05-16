@@ -2,12 +2,16 @@
 #include "BatteryPack.h"
 #include "BalancingController.h"
 #include "config.h"
+#include "logger.h"
 
 #include <iostream>
 
 int main(){
-    BalancingController ctrl;
-    ctrl.execute();
+
+    Logger logger("logFile.txt");
+
+    BalancingController ctrl(2, logger);
+    ctrl.run();
 
     return 0;
 }

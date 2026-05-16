@@ -10,6 +10,7 @@
 
 #include "config.h"
 #include "hw_access.h"
+#include "logger.h"
 
 class BatteryCell{
 private:
@@ -21,20 +22,23 @@ private:
     float soc;
     mV overVoltage;
     mV underVoltage;
+    HardwareAccess &hw;
 
-    bool readRawVoltage(std::vector<mV> &rawVoltages, HardwareAccess &hw);
-    bool readVoltage(HardwareAccess &hw);
+    Logger &logger;
+
+
+
+    bool readRawVoltage(mV &rawVoltageSum);
+    bool readVoltage();
     void determineSoc();
     void determineOverVoltage();
     void determineUnderVoltage();
 
     void faultHandling();
 public:
-    BatteryCell();
-    BatteryCell(const Type type);
-    void update(HardwareAccess &hw);
-    void discharge(mV const deltaVoltage, HardwareAccess &hw);
-    void cellInfo() const;
+    BatteryCell(const Type type, Logger &logger, HardwareAccess &hw);
+    void update();
+    void discharge(mV const deltaVoltage);
 
     int getIndex() const;
     State getState() const;

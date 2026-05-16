@@ -12,4 +12,5 @@ add_executable(BatteryManagementSystem
 	src/BatteryCell.cpp
 	src/BatteryPack.cpp
 	src/BalancingController.cpp
-	src/hw_access.cpp)
+	src/hw_access.cpp
+	src/logger.cpp)

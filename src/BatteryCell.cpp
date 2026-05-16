@@ -1,20 +1,19 @@
 #include "BatteryCell.h"
 
-BatteryCell::BatteryCell(): BatteryCell(LiIon) {}
 
-BatteryCell::BatteryCell(const Type type):
-	index(globalCellIndex++), type(type), state(INIT), overVoltage(0), underVoltage(0) {}
+BatteryCell::BatteryCell(const Type type, Logger &logger, HardwareAccess &hw):
+	hw(hw), index(globalCellIndex++), type(type), state(INIT), overVoltage(0), underVoltage(0), logger(logger) {}
 
-bool BatteryCell::readRawVoltage(std::vector<mV> &rawVoltages, HardwareAccess &hw){
+
+bool BatteryCell::readRawVoltage(mV &rawVoltageSum){
     int attemptCounter;
-    mV voltage;
     for (int i = 0; i < NUM_OF_RAW_MEASUREMENTS; i++){
         attemptCounter = 0;
         while(1){
             attemptCounter++;
-            voltage = hw.read_cell_voltage_mv(this->index);
+            voltage = this->hw.read_cell_voltage_mv(this->index);
             if (voltage){
-                rawVoltages.push_back(voltage);
+                rawVoltageSum += voltage;
                 break;
             }
             if (attemptCounter >= MAX_MEASUREMENT_ATTEMPTS){
@@ -26,42 +25,46 @@ bool BatteryCell::readRawVoltage(std::vector<mV> &rawVoltages, HardwareAccess &h
     return true;
 }
 
-bool BatteryCell::readVoltage(HardwareAccess &hw){
-    std::vector<mV> rawVoltages;
-    if (!readRawVoltage(rawVoltages, hw)){
+bool BatteryCell::readVoltage(){
+    mV rawVoltageSum = 0;
+    if (!readRawVoltage(rawVoltageSum)){
+        this->logger.log(ERROR, "Battery Cell", std::to_string(this->index) + ": Read voltage failed.");
         return false;
     }
-    mV voltage = 0;
-    for (auto const vlt: rawVoltages){
-        voltage += vlt;
-    }
-    this->voltage = (voltage /= rawVoltages.size());
+    this->voltage = (rawVoltageSum /= NUM_OF_RAW_MEASUREMENTS);
+    this->logger.log(INFO, "Battery Cell", std::to_string(this->index) + ": Read voltage succeeded: " + std::to_string(this->voltage));
     return true;
 }
 
 
 void BatteryCell::determineSoc(){
     this->soc = (0.08333 * this->voltage - 250);
+    this->logger.log(INFO, "Battery Cell", std::to_string(this->index) + ": SOC determined: " + std::to_string(this->soc));
 }
 
 
 void BatteryCell::determineOverVoltage(){
     if (this->voltage >= CELL_OVER_VOLTAGE){
         this->overVoltage = this->voltage - CELL_OVER_VOLTAGE;
+        this->logger.log(WARNING, "Battery Cell", std::to_string(this->index) + ": Overvoltage: " + std::to_string(this->overVoltage));
     } else{
         this->overVoltage = 0;
+        this->logger.log(INFO, "Battery Cell", std::to_string(this->index) + ": No overvoltage.");
     }
 }
 
 void BatteryCell::determineUnderVoltage(){
     if (this->voltage < CELL_UNDER_VOLTAGE){
         this->underVoltage = CELL_UNDER_VOLTAGE - this->voltage;
+        this->logger.log(WARNING, "Battery Cell", std::to_string(this->index) + ": Undervoltage: " + std::to_string(this->underVoltage));
     } else{
         this->underVoltage = 0;
+        this->logger.log(INFO, "Battery Cell", std::to_string(this->index) + ": No undervoltage.");
     }
 }
 
 void BatteryCell::faultHandling(){
+    this->logger.log(INFO, "Battery Cell", std::to_string(this->index) + ": Fault handling started.");
     this->state = FAULT;
     this->voltage = 0;
     this->soc = 0;
@@ -69,8 +72,8 @@ void BatteryCell::faultHandling(){
     this->underVoltage = 0;
 }
 
-void BatteryCell::update(HardwareAccess &hw){
-    if (!readVoltage(hw)){
+void BatteryCell::update(){
+    if (!readVoltage()){
         return;
     }
     determineSoc();
@@ -78,28 +81,21 @@ void BatteryCell::update(HardwareAccess &hw){
     determineUnderVoltage();
 }
 
-void BatteryCell::discharge(mV const deltaVoltage, HardwareAccess &hw){
+void BatteryCell::discharge(mV const deltaVoltage){
+    this->logger.log(INFO, "Battery Cell", std::to_string(this->index) + ": Discharge started.");
 	this->state = DISCHARGING;
 	mV targetVoltage = this->voltage - deltaVoltage;
 
 	while(this->voltage > targetVoltage){
-	    hw.toggle_balancing_resistor(this->index);
-	    if (!readVoltage(hw)){
+	    this->hw.toggle_balancing_resistor(this->index);
+	    if (!readVoltage()){
 	        return;
 	    }
 	}
+	this->logger.log(INFO, "Battery Cell", std::to_string(this->index) + ": Discharge finished.");
 	this->state = STANDBY;
 }
 
-void BatteryCell::cellInfo() const{
-    std::cout << "######## CELL -" 	<< this->index << "- INFO ########" << std::endl;
-    std::cout << "type:\t\t" 		<< this->type << std::endl;
-    std::cout << "state:\t\t" 		<< this->state << std::endl;
-    std::cout << "voltage:\t" 		<< this->voltage << std::endl;
-    std::cout << "soc:\t\t" 		<< this->soc << std::endl;
-    std::cout << "over voltage:\t" 	<< this->overVoltage << std::endl;
-    std::cout << "under voltage:\t" << this->underVoltage << std::endl << std::endl;
-}
 
 int BatteryCell::getIndex() const{
     return this->index;

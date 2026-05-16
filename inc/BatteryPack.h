@@ -5,25 +5,39 @@
 
 #include "config.h"
 #include "BatteryCell.h"
+#include "logger.h"
 
 #include <stdint.h>
 #include <array>
 #include <algorithm>
+#include <thread>
 
 class BatteryPack{
 private:
-    static int globalPackIndex;
-    int index;
     mV overVoltage;
     mV deltaVoltage;
-    void determineOverVoltage(std::array<BatteryCell, NUM_OF_BATTERY_CELLS> const &batteryCells);
-    void determineDeltaVoltage(std::array<BatteryCell, NUM_OF_BATTERY_CELLS> const &batteryCells);
-public:
-    BatteryPack();
-    void update(std::array<BatteryCell, NUM_OF_BATTERY_CELLS> const &batteryCells);
+    int iteration;
+
+    Logger &logger;
+
+    HardwareAccess hw;
+    std::vector<BatteryCell> batteryCells;
+
+
+    mV determineDischargeAmount(int const cellIndex) const;
+    void serviceRoutine();
+
+    void update();
+
+    bool packActive();
+
     void packInfo() const;
-    mV getOverVoltage() const;
-    mV getDeltaVoltage() const;
+    void determineOverVoltage();
+    void determineDeltaVoltage();
+public:
+    BatteryPack(Logger &logger);
+    void execute();
+
 
 };
 

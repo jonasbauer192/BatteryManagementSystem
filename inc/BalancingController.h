@@ -6,6 +6,7 @@
 #include "BatteryPack.h"
 #include "BatteryCell.h"
 #include "config.h"
+#include "logger.h"
 #include <stdint.h>
 #include <array>
 #include <vector>
@@ -15,21 +16,11 @@
 
 class BalancingController{
 private:
-    static int globalCellIndex;
-    int index;
-    BatteryPack batteryPack;
-    std::array<BatteryCell, NUM_OF_BATTERY_CELLS> batteryCells;
-    HardwareAccess hw;
-    int iteration;
-
-    mV determineDischargeAmount(int const cellIndex) const;
-    void report();
-    void serviceRoutine();
-    void update();
-
+    std::vector<BatteryPack> batteryPacks;
+    Logger &logger;
 public:
-    BalancingController();
-    void execute();
+    BalancingController(int const numOfPacks, Logger &logger);
+    void run();
 };
 
 #endif

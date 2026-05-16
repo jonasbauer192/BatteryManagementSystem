@@ -1,7 +1,8 @@
 #pragma once
 #include <stdint.h>
 
-#define NUM_OF_BATTERY_CELLS        4
+#define NUM_OF_BATTERY_CELLS        8
+#define NUM_OF_BATTERY_CELLS_PER_PACK       4
 #define NUM_OF_RAW_MEASUREMENTS     5
 #define MAXIMUM_CELL_VOLTAGE        4200
 #define MINIMUM_CELL_VOLTAGE        3200
@@ -21,6 +22,14 @@ typedef uint16_t mV;
 enum Type{
     LiFePO4 = 1,
     LiIon = 2
+};
+
+enum LogLevel{
+    DEBUG,
+    INFO,
+    WARNING,
+    ERROR,
+    CRITICAL
 };
 
 
